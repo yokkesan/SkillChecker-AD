@@ -34,3 +34,9 @@ val DashboardSubText =
 
 val DashboardBorder =
     Color(0xFF1F2937)
+
+val RepositoryInputBackground =
+    Color(0xFF0F172A)
+
+val RepositoryPlaceholder =
+    Color(0xFF6B7280)

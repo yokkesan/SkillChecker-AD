@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
 
-    val repositoryApi: RepositoryApi =
+    private val retrofit: Retrofit =
         Retrofit.Builder()
             .baseUrl(
                 BuildConfig.API_BASE_URL
@@ -15,7 +15,14 @@ object RetrofitClient {
                 GsonConverterFactory.create()
             )
             .build()
-            .create(
-                RepositoryApi::class.java
-            )
+
+    val authApi: AuthApi =
+        retrofit.create(
+            AuthApi::class.java
+        )
+
+    val repositoryApi: RepositoryApi =
+        retrofit.create(
+            RepositoryApi::class.java
+        )
 }

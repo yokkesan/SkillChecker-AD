@@ -37,6 +37,22 @@ fun DashboardScreen(
     val repositories =
         viewModel.repositories
 
+    val contributions =
+        repositories
+            .flatMap { repository ->
+                repository.contributions
+                    ?.entries
+                    ?: emptySet()
+            }
+            .groupBy { entry ->
+                entry.key
+            }
+            .mapValues { (_, entries) ->
+                entries.sumOf { entry ->
+                    entry.value
+                }
+            }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -109,6 +125,30 @@ fun DashboardScreen(
         item {
             GithubStatsCard(
                 repositories = repositories
+            )
+        }
+
+        item {
+            ContributionChart(
+                contributions = contributions
+            )
+        }
+
+        item {
+            RepositoryForm(
+                isRegistering =
+                    viewModel.isRegistering,
+                errorMessage =
+                    viewModel.errorMessage,
+                onRegister = {
+                        githubUrl,
+                        onSuccess ->
+
+                    viewModel.createRepository(
+                        githubUrl = githubUrl,
+                        onSuccess = onSuccess
+                    )
+                }
             )
         }
 

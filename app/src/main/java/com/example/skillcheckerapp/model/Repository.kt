@@ -20,5 +20,7 @@ data class Repository(
 
     val forks_count: Int?,
 
-    val score: Int?
+    val score: Int?,
+
+    val contributions: Map<String, Int>?
 )

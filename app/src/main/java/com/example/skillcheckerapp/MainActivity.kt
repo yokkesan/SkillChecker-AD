@@ -4,40 +4,49 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.skillcheckerapp.ui.theme.SkillCheckerAppTheme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import com.example.skillcheckerapp.network.RetrofitClient
 import com.example.skillcheckerapp.ui.dashboard.DashboardScreen
+import com.example.skillcheckerapp.ui.login.LoginScreen
+import com.example.skillcheckerapp.ui.theme.SkillCheckerAppTheme
 
 class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+
+    override fun onCreate(
+        savedInstanceState: Bundle?
+    ) {
+        super.onCreate(
+            savedInstanceState
+        )
+
+        RetrofitClient.initialize(
+            applicationContext
+        )
+
         enableEdgeToEdge()
+
         setContent {
             SkillCheckerAppTheme {
-                DashboardScreen()
+                var isLoggedIn by mutableStateOf(
+                    RetrofitClient
+                        .getTokenManager()
+                        .hasToken()
+                )
+
+                if (
+                    isLoggedIn
+                ) {
+                    DashboardScreen()
+                } else {
+                    LoginScreen(
+                        onLoginSuccess = {
+                            isLoggedIn = true
+                        }
+                    )
+                }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    SkillCheckerAppTheme {
-        Greeting("Android")
     }
 }
